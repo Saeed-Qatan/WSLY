@@ -1,5 +1,7 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:wsly/view/order_history_page.dart';
+
 import 'package:wsly/view/order_page.dart';
 import 'package:wsly/view/profile_page.dart';
 
@@ -13,7 +15,7 @@ class MainPage extends StatefulWidget {
 int _selectedIdex = 0;
 
 class _MainPageState extends State<MainPage> {
-  static List<Widget> _screens = <Widget>[
+  static final List<Widget> _screens = <Widget>[
     OrderHistoryPage(),
     OrderPage(),
     ProfilePage(),
@@ -26,28 +28,27 @@ class _MainPageState extends State<MainPage> {
       child: SafeArea(
         child: Scaffold(
           body: Center(child: _screens[_selectedIdex]),
-          bottomNavigationBar: BottomNavigationBar(
+          bottomNavigationBar: CurvedNavigationBar(
+            backgroundColor: Colors.transparent,
+            buttonBackgroundColor: Color(0xff7042A4),
+            color: Color(0xff4B148B),
+            animationDuration: const Duration(milliseconds: 300),
+            items: const <Widget>[
+              Icon(
+                Icons.history,
+                size: 26,
+                color: Colors.white,
+                semanticLabel: "History",
+              ),
+              Icon(Icons.shopping_cart, size: 26, color: Colors.white),
+              Icon(Icons.list_alt, size: 26, color: Colors.white),
+            ],
+
             onTap: (value) {
               setState(() {
                 _selectedIdex = value;
               });
             },
-
-            currentIndex: _selectedIdex,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history_edu_sharp),
-                label: "السجل",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart),
-                label: "الطلبات",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "بياناتي",
-              ),
-            ],
           ),
         ),
       ),
