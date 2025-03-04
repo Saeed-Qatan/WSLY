@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 
 import 'package:flutter/material.dart';
 
@@ -27,8 +27,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
           SizedBox(height: 20),
           DeliveryCard(
             order: OrderRegistryModel(
-              storeName: "Store Name",
-              ownerName: "Owner Name",
+              storeName: "بقالة العمري",
+              ownerName: "عبدالله العمري",
               deliveryTime:
                   DateTime.now().millisecondsSinceEpoch /
                   1000, // Current time in seconds
@@ -45,6 +45,17 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                   DateTime.now().millisecondsSinceEpoch /
                   1000, // Current time in seconds
               status: OrderStatus.deliverd,
+              imageUrl: "https://example.com/image.jpg",
+            ),
+          ),
+          DeliveryCard(
+            order: OrderRegistryModel(
+              storeName: "بقالة المطيري",
+              ownerName: "سالم حسن",
+              deliveryTime:
+                  DateTime.now().millisecondsSinceEpoch /
+                  1000, // Current time in seconds
+              status: OrderStatus.canceled,
               imageUrl: "https://example.com/image.jpg",
             ),
           ),
