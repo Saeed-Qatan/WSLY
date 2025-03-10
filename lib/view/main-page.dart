@@ -1,7 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:wsly/data/models/ProfileEdit_model.dart';
+import 'package:wsly/view/Editprofile.dart';
+import 'package:wsly/view/drawer.dart';
 import 'package:wsly/view/order_history_page.dart';
-
 import 'package:wsly/view/order_page.dart';
 import 'package:wsly/view/profile_page.dart';
 
@@ -12,12 +14,13 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-int _selectedIdex = 0;
+int _selectedIndex = 0;
 
 class _MainPageState extends State<MainPage> {
   static final List<Widget> _screens = <Widget>[
     OrderHistoryPage(),
     OrderPage(),
+    // EditProfile(),
     ProfilePage(),
   ];
 
@@ -27,7 +30,19 @@ class _MainPageState extends State<MainPage> {
       textDirection: TextDirection.ltr,
       child: SafeArea(
         child: Scaffold(
-          body: Center(child: _screens[_selectedIdex]),
+          drawer: CustomDrawer(
+            profileEdit: ProfileEdit(
+              name: 'علي ناصر',
+              email: 'Alinasser@gmail.com',
+              address: '123 Main St',
+              number: '774165326',
+              car_Plate: 'ABC/123',
+              password: '123456',
+            ),
+          ),
+
+          body: Center(child: _screens[_selectedIndex]),
+
           bottomNavigationBar: CurvedNavigationBar(
             backgroundColor: Colors.transparent,
             buttonBackgroundColor: Color(0xff7042A4),
@@ -46,7 +61,7 @@ class _MainPageState extends State<MainPage> {
 
             onTap: (value) {
               setState(() {
-                _selectedIdex = value;
+                _selectedIndex = value;
               });
             },
           ),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class WaveclipperWidget extends StatefulWidget {
@@ -17,21 +19,31 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
           child: Container(
             height:
                 MediaQuery.of(context).size.height * 0.25, // نسبة لتكون متجاوبة
-
             color: Color(0xff4B148B),
-
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-
                 children: [
-                  Text(
-                    "WSLY",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 45,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.menu, color: Colors.white),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                          print("open drawer");
+                        },
+                      ),
+                      SizedBox(width: 100),
+                      Text(
+                        "WSLY",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 45,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
                   ),
                   Text(
                     "شركة وصل لي",
@@ -52,20 +64,6 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
                 ],
               ),
             ),
-          ),
-        ),
-
-        Container(
-          alignment: Alignment.topLeft,
-          height: MediaQuery.of(context).size.height * 0.24,
-          width: MediaQuery.of(context).size.width * 0.12,
-          decoration: BoxDecoration(
-            color: Color(0xff7042A4).withOpacity(0.6),
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(60)),
-          ),
-          child: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.menu, color: Colors.white),
           ),
         ),
       ],

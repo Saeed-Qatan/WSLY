@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/widgets.dart';
+import 'package:wsly/data/models/ProfileEdit_model.dart';
+import 'package:wsly/view/drawer.dart';
 import 'package:wsly/widgets/waveclipper_widget.dart';
 
 class OrderPage extends StatefulWidget {
@@ -14,13 +16,22 @@ class _OrderHistoryPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(
+        profileEdit: ProfileEdit(
+          name: 'علي ناصر',
+          email: 'Alinasser@gmail.com',
+          address: '123 Main St',
+          number: '774165326',
+          car_Plate: 'ABC/123',
+          password: '123456',
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             WaveclipperWidget(),
-
             Text.rich(
               TextSpan(
                 children: [

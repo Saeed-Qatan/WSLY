@@ -6,7 +6,7 @@ import 'package:wsly/viewmodels/current_order_viewmodel.dart';
 class CurrentOrders extends StatefulWidget {
   final CurrentOrdersModel currentOrder;
   
-   CurrentOrders({super.key, required this.currentOrder, });
+  CurrentOrders({super.key, required this.currentOrder, });
 
   @override
   State<CurrentOrders> createState() => _CurrentOrdersState();
@@ -14,7 +14,6 @@ class CurrentOrders extends StatefulWidget {
 
 class _CurrentOrdersState extends State<CurrentOrders> {
   
-       
     
   @override
   Widget build(BuildContext context) {

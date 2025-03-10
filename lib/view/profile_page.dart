@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/data/models/current_orders_model.dart';
+import 'package:wsly/view/drawer.dart';
 import 'package:wsly/viewmodels/current_order_viewmodel.dart';
 import 'package:wsly/widgets/current_orders.dart';
 import 'package:wsly/widgets/waveclipper_widget.dart';
@@ -12,11 +14,19 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(
+        profileEdit: ProfileEdit(
+          name: 'علي ناصر',
+          email: 'Alinasser@gmail.com',
+          address: '123 Main St',
+          number: '774165326',
+          car_Plate: 'ABC/123',
+          password: '123456',
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -25,12 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 30),
             CurrentOrder(),
             SizedBox(height: 20),
-
-          
             CurrentOrders(
               currentOrder: CurrentOrdersModel(
-
-
                 storeName: "متجر 1",
                 ownerName: "المالك 1",
                 deliveryTime: DateTime.now().millisecondsSinceEpoch / 1000,
