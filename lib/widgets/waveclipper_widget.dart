@@ -18,7 +18,7 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
           clipper: Waveclipper(),
           child: Container(
             height:
-                MediaQuery.of(context).size.height * 0.25, // نسبة لتكون متجاوبة
+            MediaQuery.of(context).size.height * 0.25, // نسبة لتكون متجاوبة
             color: Color(0xff4B148B),
             child: Center(
               child: Column(
