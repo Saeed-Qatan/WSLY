@@ -1,11 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'package:wsly/view/Editprofile.dart';
-import 'package:wsly/view/drawer.dart';
-import 'package:wsly/view/order_history_page.dart';
-import 'package:wsly/view/order_page.dart';
-import 'package:wsly/view/profile_page.dart';
+import 'Editprofile.dart';
+import 'drawer.dart';
+import 'order_history_page.dart';
+import 'order_page.dart';
+import 'current_orders_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

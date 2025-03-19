@@ -5,16 +5,14 @@ import 'package:wsly/viewmodels/current_order_viewmodel.dart';
 
 class CurrentOrders extends StatefulWidget {
   final CurrentOrdersModel currentOrder;
-  
-  CurrentOrders({super.key, required this.currentOrder, });
+
+  CurrentOrders({super.key, required this.currentOrder});
 
   @override
   State<CurrentOrders> createState() => _CurrentOrdersState();
 }
 
 class _CurrentOrdersState extends State<CurrentOrders> {
-  
-    
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -39,6 +37,7 @@ class _CurrentOrdersState extends State<CurrentOrders> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+            
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -133,55 +132,55 @@ Widget _buildButton(String text, Color color) {
   );
 }
 
-class currentOrdersList extends StatefulWidget {
-  @override
-  currentOrdersListState createState() => currentOrdersListState();
-}
+// class currentOrdersList extends StatefulWidget {
+//   @override
+//   currentOrdersListState createState() => currentOrdersListState();
+// }
 
-class currentOrdersListState extends State<currentOrdersList> {
-  @override
-  void initState() {
-    super.initState();
-    // Fetch orders when the widget is initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CurrentOrderViewmodel>().getCurrentOrders();
-    });
-  }
+// class currentOrdersListState extends State<currentOrdersList> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     // Fetch orders when the widget is initialized
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       context.read<CurrentOrderViewmodel>().getCurrentOrders();
+//     });
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<CurrentOrderViewmodel>(
-      builder: (context, viewmodel, child) {
-        if (viewmodel.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer<CurrentOrderViewmodel>(
+//       builder: (context, viewmodel, child) {
+//         if (viewmodel.isLoading) {
+//           return Center(child: CircularProgressIndicator());
+//         }
 
-        if (viewmodel.errorMessage != null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(viewmodel.errorMessage!),
-                ElevatedButton(
-                  onPressed: () => viewmodel.getCurrentOrders(),
-                  child: Text('إعادة المحاولة'),
-                ),
-              ],
-            ),
-          );
-        }
+//         if (viewmodel.errorMessage != null) {
+//           return Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text(viewmodel.errorMessage!),
+//                 ElevatedButton(
+//                   onPressed: () => viewmodel.getCurrentOrders(),
+//                   child: Text('إعادة المحاولة'),
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
 
-        if (viewmodel.currentorders.isEmpty) {
-          return Center(child: Text('لا توجد طلبات'));
-        }
+//         if (viewmodel.currentorders.isEmpty) {
+//           return Center(child: Text('لا توجد طلبات'));
+//         }
 
-        return ListView.builder(
-          itemCount: viewmodel.currentorders.length,
-          itemBuilder: (context, index) {
-            return CurrentOrders(currentOrder: viewmodel.currentorders[index]);
-          },
-        );
-      },
-    );
-  }
-}
+//         return ListView.builder(
+//           itemCount: viewmodel.currentorders.length,
+//           itemBuilder: (context, index) {
+//             return CurrentOrders(currentOrder: viewmodel.currentorders[index]);
+//           },
+//         );
+//       },
+//     );
+//   }
+// }

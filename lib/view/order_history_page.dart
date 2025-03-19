@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/data/models/order_registry_model.dart';
-import 'package:wsly/view/main-page.dart';
-import 'package:wsly/widgets/delivery_state.dart';
-import 'package:wsly/widgets/waveclipper_widget.dart';
-import 'package:wsly/view/drawer.dart';
+import 'main-page.dart';
+import '../../widgets/delivery_state.dart';
+import '../../widgets/waveclipper_widget.dart';
+import 'drawer.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});

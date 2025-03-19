@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'package:wsly/view/Editprofile.dart';
-import 'package:wsly/view/main-page.dart';
-import 'package:wsly/view/order_page.dart';
+import 'Editprofile.dart';
+import 'main-page.dart';
+import 'order_page.dart';
 
 class CustomDrawer extends StatefulWidget {
   final ProfileEdit profileEdit;

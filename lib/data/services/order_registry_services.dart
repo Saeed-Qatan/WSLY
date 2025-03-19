@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:wsly/core/constants/api_url.dart';
+import 'package:wsly/core/constants/Networks/api_url.dart';
 import 'package:wsly/data/models/order_registry_model.dart';
 import 'package:http/http.dart' as http;
 

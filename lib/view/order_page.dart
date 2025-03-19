@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'package:wsly/view/drawer.dart';
-import 'package:wsly/widgets/waveclipper_widget.dart';
+import 'drawer.dart';
+import '../../widgets/waveclipper_widget.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});

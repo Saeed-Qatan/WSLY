@@ -1,9 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'package:wsly/view/drawer.dart';
-import 'package:wsly/view/main-page.dart';
-import 'package:wsly/widgets/waveclipper_widget.dart';
+import 'drawer.dart';
+import 'main-page.dart';
+import '../../widgets/waveclipper_widget.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});

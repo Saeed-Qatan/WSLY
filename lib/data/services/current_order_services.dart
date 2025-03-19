@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:wsly/core/constants/api_url.dart';
+import 'package:wsly/core/constants/Networks/api_url.dart';
 import 'package:wsly/data/models/current_orders_model.dart';
 
 class CurrentOrderServices {
