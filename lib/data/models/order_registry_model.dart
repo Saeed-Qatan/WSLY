@@ -2,6 +2,7 @@ enum OrderStatus { deliverd, inProgress, canceled }
 
 class OrderRegistryModel {
   
+  
   final String storeName;
   final String ownerName;
   final double deliveryTime;
@@ -21,6 +22,7 @@ class OrderRegistryModel {
   factory OrderRegistryModel.fromJson(Map<String, dynamic> json) {
     return OrderRegistryModel(
       
+      
       storeName: json["storeName"],
       ownerName: json["ownerName"],
       deliveryTime: json["deliveryTime"],
@@ -32,6 +34,7 @@ class OrderRegistryModel {
   Map<String, dynamic> toJson() {
     return {
       
+    
       'stor_eName': storeName,
       'owner_Name': ownerName,
       'delivery_Time': deliveryTime,

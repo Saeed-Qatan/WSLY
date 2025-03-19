@@ -1,13 +1,13 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'dart:ffi';
+// ignore_for_file: non_constant_identifier_name
 
 import 'package:flutter/material.dart';
 
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/data/models/order_registry_model.dart';
-import 'main-page.dart';
+import 'package:wsly/viewmodels/order_registry_viewmodel.dart';
+
 import '../../widgets/delivery_state.dart';
 import '../../widgets/waveclipper_widget.dart';
 import 'drawer.dart';
@@ -23,6 +23,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       drawer: CustomDrawer(
         profileEdit: ProfileEdit(
           name: 'علي ناصر',
@@ -33,55 +34,49 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
           password: '123456',
         ),
       ),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              WaveclipperWidget(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: text_rich_method(),
-              ),
-              SizedBox(height: 30),
-              order_history_text(),
-              SizedBox(height: 20),
-              DeliveryCard(
-                order: OrderRegistryModel(
-                  storeName: "بقالة العمري",
-                  ownerName: "عبدالله العمري",
-                  deliveryTime:
-                      DateTime.now().millisecondsSinceEpoch /
-                      1000, // Current time in seconds
-                  status: OrderStatus.inProgress,
-                  imageUrl: "https://example.com/image.jpg",
-                ),
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            WaveclipperWidget(),
+            Align(alignment: Alignment.centerRight, child: text_rich_method()),
+            SizedBox(height: 30),
+            order_history_text(),
+            SizedBox(height: 20),
+            Consumer<OrderRegistryViewmodel>(
+              builder: (context, viewmodel, child) {
+                if (viewmodel.isLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-              DeliveryCard(
-                order: OrderRegistryModel(
-                  storeName: "بقالة المطيري",
-                  ownerName: "سالم حسن",
-                  deliveryTime:
-                      DateTime.now().millisecondsSinceEpoch /
-                      1000, // Current time in seconds
-                  status: OrderStatus.deliverd,
-                  imageUrl: "https://example.com/image.jpg",
-                ),
-              ),
-              DeliveryCard(
-                order: OrderRegistryModel(
-                  storeName: "بقالة المطيري",
-                  ownerName: "سالم حسن",
-                  deliveryTime:
-                      DateTime.now().millisecondsSinceEpoch /
-                      1000, // Current time in seconds
-                  status: OrderStatus.canceled,
-                  imageUrl: "https://example.com/image.jpg",
-                ),
-              ),
-            ],
-          ),
-        ],
+                if (viewmodel.errorMessage != null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(viewmodel.errorMessage!),
+                        ElevatedButton(
+                          onPressed: () => viewmodel.getOrders(),
+                          child: Text('إعادة المحاولة'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                if (viewmodel.ordersRegistry.isEmpty) {
+                  return Center(child: Text('لا توجد طلبات'));
+                }
+
+                return ListView.builder(
+                  itemCount: viewmodel.ordersRegistry.length,
+                  itemBuilder: (context, index) {
+                    return DeliveryCard(order: viewmodel.ordersRegistry[index]);
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

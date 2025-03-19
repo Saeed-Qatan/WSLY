@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
+import 'package:wsly/data/services/auth_service.dart';
+import 'package:wsly/view/logout_page.dart';
+import 'package:wsly/viewmodels/delete_account_view_model.dart';
+import 'package:wsly/viewmodels/logout_viewmodel.dart';
+import 'package:wsly/widgets/delete_dialog_widget.dart';
+import 'package:wsly/widgets/logout_dialog_widget.dart';
 import 'Editprofile.dart';
 import 'main-page.dart';
 import 'order_page.dart';
@@ -137,10 +144,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MainPage()),
-              );
+              showLogoutDialog(context, () async {
+                await LogoutViewModel(
+                  context.read<AuthService>(),
+                ).logout(context);
+              });
             },
           ),
           ListTile(
@@ -154,7 +162,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              showDeleteAccountDialog(context, () async {
+                await DeleteAccountViewModel(context.read<AuthService>(),0).deleteAccount(context);
+              });
             },
           ),
         ],

@@ -18,6 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       drawer: CustomDrawer(
         profileEdit: ProfileEdit(
           name: 'علي ناصر',
@@ -32,7 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             WaveclipperWidget(),
-            Align(alignment: Alignment.centerRight, child: textRichMethod()),
+
+            Align(alignment: Alignment.centerRight, child: text_rich_method()),
             SizedBox(height: 30),
             currentOrderHeader(),
             SizedBox(height: 20),
@@ -85,12 +87,12 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Text textRichMethod() {
+  Text text_rich_method() {
     return Text.rich(
       TextSpan(
         children: [
           TextSpan(
-            text: "مرحبا بك ",
+            text: "مرحبا بك  ",
             style: TextStyle(
               fontSize: 30,
               color: Color(0xff4B148B),
@@ -98,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           TextSpan(
-            text: "أبو خالد",
+            text: " ابو خالد  ",
             style: TextStyle(
               fontSize: 30,
               color: Color(0xff13D08C),
