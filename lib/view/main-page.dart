@@ -1,8 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'package:wsly/view/assigned_orders_page.dart';
-import 'Editprofile.dart';
 import 'drawer.dart';
 import 'order_history_page.dart';
 import 'order_page.dart';
