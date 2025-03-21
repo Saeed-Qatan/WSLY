@@ -25,14 +25,14 @@ class _LoginPageState extends State<LoginPage> {
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("image/login.png"),
+                image: AssetImage("assets/images/login.png"),
                 fit: BoxFit.fitHeight,
               ),
             ),
             child: Column(
               children: [
                 SizedBox(height: 60),
-                Image.asset("image/logo1.png", width: 120),
+                Image.asset("assets/images/logo1.png", width: 120),
                 SizedBox(height: 40),
                 Text(
                   "تسجيل الدخول",

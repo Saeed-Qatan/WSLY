@@ -17,7 +17,7 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
           clipper: Waveclipper(),
           child: Container(
             height:
-            MediaQuery.of(context).size.height * 0.25, // نسبة لتكون متجاوبة
+                MediaQuery.of(context).size.height * 0.25, // نسبة لتكون متجاوبة
             color: Color(0xff4B148B),
             child: Center(
               child: Column(
@@ -34,31 +34,15 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
                         },
                       ),
                       SizedBox(width: 100),
-                      Text(
-                        "WSLY",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 45,
-                          fontWeight: FontWeight.w900,
+                      SizedBox(height: 50),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Image.asset(
+                          "assets/images/logo1.png",
+                          width: MediaQuery.of(context).size.width * 0.25,
                         ),
                       ),
                     ],
-                  ),
-                  Text(
-                    "شركة وصل لي",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    "للخدمات اللوجيستية",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
                   ),
                 ],
               ),

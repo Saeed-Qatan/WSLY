@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:wsly/view/login_pagee.dart';
 import 'package:wsly/view/register_page.dart';
 
-
 class HelloPage extends StatefulWidget {
   const HelloPage({super.key});
 
@@ -20,7 +19,7 @@ class _HelloPageState extends State<HelloPage> {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("image/bg.png"),
+              image: AssetImage("assets/images/bg.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -37,13 +36,8 @@ class _HelloPageState extends State<HelloPage> {
                       color: Color(0xff491383),
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: 120,
-                          ),
-                          Image.asset(
-                            "image/logo1.png",
-                            width: 130,
-                          ),
+                          SizedBox(width: 120),
+                          Image.asset("assets/images/logo1.png", width: 130),
                         ],
                       ),
                     ),
@@ -51,7 +45,7 @@ class _HelloPageState extends State<HelloPage> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(50, 130, 50, 0),
+                padding: const EdgeInsets.fromLTRB(40, 130, 50, 0),
                 child: Text(
                   "اهلاً وسهلاً بك في تطبيق وصل لي",
                   style: TextStyle(
@@ -64,8 +58,10 @@ class _HelloPageState extends State<HelloPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 60.0, vertical: 30),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 60.0,
+                  vertical: 30,
+                ),
                 child: Text(
                   "تطبيق وصل لي موجود ليسهل لك توفير طلباتك الي تحتاجها من اي مورد وفي اقصر وقت ممكن",
                   style: TextStyle(
@@ -78,8 +74,10 @@ class _HelloPageState extends State<HelloPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 50),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 50,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -91,43 +89,45 @@ class _HelloPageState extends State<HelloPage> {
                         ); // Go back
                       },
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          backgroundColor: Color(0xff491383),
-                          minimumSize: Size(100, 55)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: Color(0xff491383),
+                        minimumSize: Size(100, 55),
+                      ),
                       child: Text(
                         "تسجيل الدخول",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 19,
-                            fontFamily: "NotoSansArabic"),
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 19,
+                          fontFamily: "NotoSansArabic",
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
+                    SizedBox(width: 20),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RegisterPage()),
+                            builder: (context) => RegisterPage(),
+                          ),
                         );
                       },
                       child: Text(
                         "حساب جديد",
                         style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 19,
-                            fontFamily: "NotoSansArabic"),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 19,
+                          fontFamily: "NotoSansArabic",
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -145,11 +145,19 @@ class MyClipper extends CustomClipper<Path> {
     final path_1 = Path();
 
     path_1.moveTo(0, 0);
-    path_1.quadraticBezierTo(size.width * 1.0007400, size.height * -0.0035000,
-        size.width, size.height * 0.0010600);
+    path_1.quadraticBezierTo(
+      size.width * 1.0007400,
+      size.height * -0.0035000,
+      size.width,
+      size.height * 0.0010600,
+    );
     path_1.lineTo(size.width * 1.0016000, size.height * 1.0016000);
     path_1.quadraticBezierTo(
-        size.width * 0.2129800, size.height * 0.8367800, 0, 0);
+      size.width * 0.2129800,
+      size.height * 0.8367800,
+      0,
+      0,
+    );
     path_1.close();
 
     return path_1;

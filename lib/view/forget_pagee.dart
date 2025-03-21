@@ -23,7 +23,7 @@ class _ForgetPageState extends State<ForgetPage> {
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("image/register.png"),
+                image: AssetImage("assets/images/register.png"),
                 fit: BoxFit.cover,
               ),
             ),
