@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wsly/data/models/assigned_orders_model.dart';
+import 'package:wsly/data/models/Admin/assigned_orders_model.dart';
 import 'package:wsly/viewmodels/assinged_orders_viewmodel.dart';
 import 'package:wsly/widgets/assinged_orders_widget.dart';
 import 'package:wsly/widgets/waveclipper_widget.dart';

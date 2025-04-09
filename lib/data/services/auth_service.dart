@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wsly/core/constants/Networks/api_url.dart';
+import 'package:wsly/core/constants/services/api_url.dart';
 
 class AuthService {
   Future<void> login(String email, String password) async {
@@ -15,9 +15,8 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final userId = data["user_id"]; // الحصول على userId من الاستجابة
+      final userId = data["user_id"]; 
 
-      // تخزين userId في SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt("user_id", userId);
     } else {
@@ -25,7 +24,7 @@ class AuthService {
     }
   }
 
-  // دالة لاسترجاع userId من SharedPreferences
+  
   Future<int?> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt("user_id");

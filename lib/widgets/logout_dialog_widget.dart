@@ -10,14 +10,14 @@ Future<void> showLogoutDialog(BuildContext context, VoidCallback onConfirm) asyn
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // إغلاق مربع الحوار
+              Navigator.of(context).pop(); 
             },
             child: Text("إلغاء"),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop(); // إغلاق مربع الحوار
-              onConfirm(); // تنفيذ عملية تسجيل الخروج
+              Navigator.of(context).pop(); 
+              onConfirm(); 
             },
             child: Text("تسجيل الخروج"),
           ),

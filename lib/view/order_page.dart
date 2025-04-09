@@ -1,18 +1,23 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
+import 'package:wsly/view/camera_page.dart';
 import 'drawer.dart';
 import '../../widgets/waveclipper_widget.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({super.key});
+  List<CameraDescription> cameras = [];
+
+  OrderPage(this.cameras, {super.key});
 
   @override
   State<OrderPage> createState() => _OrderHistoryPageState();
 }
 
 class _OrderHistoryPageState extends State<OrderPage> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +96,38 @@ class _OrderHistoryPageState extends State<OrderPage> {
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("فتح الكاميرا"),
+                            content: Text("هل تريد فتح الكاميرا؟"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("إلغاء"),
+                              ),
+                              TextButton(
+  onPressed: () {
+    Navigator.of(context).pop(); // أغلق الـ dialog أولًا
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraPage(cameras: widget.cameras),
+      ),
+    );
+  },
+  child: Text("فتح"),
+),
+
+                            ],
+                          );
+                        },
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff4B148B),
                       shape: RoundedRectangleBorder(

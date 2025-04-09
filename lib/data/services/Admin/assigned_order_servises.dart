@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:wsly/core/constants/Networks/api_url.dart';
+import 'package:wsly/core/constants/services/api_url.dart';
 import 'dart:convert';
-import 'package:wsly/data/models/assigned_orders_model.dart';
+import 'package:wsly/data/models/Admin/assigned_orders_model.dart';
 
 class AssignedOrdersService {
   Future<AssignedOrdersModel> fetchOrderDetails(int orderId, ) async {

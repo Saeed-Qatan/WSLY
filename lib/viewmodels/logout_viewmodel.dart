@@ -14,6 +14,6 @@ class LogoutViewModel extends ChangeNotifier {
     AppNavigation.pushReplacment(
       context,
       MainPage(),
-    ); //; توجيه لصفحة تسجيل الدخول
+    ); 
   }
 }

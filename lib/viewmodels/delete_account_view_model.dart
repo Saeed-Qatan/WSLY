@@ -16,8 +16,8 @@ class DeleteAccountViewModel extends ChangeNotifier {
     }
 
     try {
-      await _authService.deleteAccount(userId); // إرسال طلب الحذف
-      Navigator.pushReplacementNamed(context, '/login'); // إعادة التوجيه
+      await _authService.deleteAccount(userId); 
+      Navigator.pushReplacementNamed(context, '/login'); 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("فشل حذف الحساب")),

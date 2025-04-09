@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wsly/data/services/auth_service.dart';
-import 'package:wsly/view/main-page.dart';
 import 'package:wsly/view/splash_page.dart';
-import 'package:wsly/viewmodels/assinged_orders_viewmodel.dart';
 import 'package:wsly/viewmodels/current_order_viewmodel.dart';
+import 'package:wsly/viewmodels/date_time_view_model.dart';
 import 'package:wsly/viewmodels/delete_account_view_model.dart';
 import 'package:wsly/viewmodels/logout_viewmodel.dart';
 import 'package:wsly/viewmodels/order_registry_viewmodel.dart';
+import 'package:camera/camera.dart';
 
-void main() async {
+
+
+List<CameraDescription> cameras = [];
+Future<Null> main() async {
+
+  cameras= await availableCameras();
   WidgetsFlutterBinding.ensureInitialized();
 
   final authService = AuthService();
@@ -34,6 +39,8 @@ void main() async {
               (context) =>
                   DeleteAccountViewModel(context.read<AuthService>(), userId),
         ),
+
+        ChangeNotifierProvider(create: (_) => DateTimeViewModel()),
       ],
       child: MyApp(),
     ),

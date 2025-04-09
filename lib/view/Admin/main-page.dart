@@ -1,21 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'package:wsly/main.dart';
-
-import 'current_orders_page.dart';
 import 'drawer.dart';
-import 'order_history_page.dart';
-import 'order_page.dart';
+import 'current_orders_page.dart';
 
 class MainPage extends StatefulWidget {
-  var cameras;
-   MainPage({
-    Key? key,
-    this.cameras,
-  }) : super(key: key);
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -25,9 +15,10 @@ int _selectedIndex = 0;
 
 class _MainPageState extends State<MainPage> {
   static final List<Widget> _screens = <Widget>[
-    OrderHistoryPage(),
-    OrderPage(cameras),
-   CurrentOrdersPage(),
+    
+    // EditProfile(),
+    ProfilePage(),
+   //AssignedOrdersPage(),
   ];
 
   @override

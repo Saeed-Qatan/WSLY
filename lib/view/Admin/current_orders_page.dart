@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/data/models/current_orders_model.dart';
-import 'drawer.dart';
+import 'package:wsly/view/drawer.dart';
 import 'package:wsly/viewmodels/current_order_viewmodel.dart';
 import '../../widgets/current_orders.dart';
 import '../../widgets/waveclipper_widget.dart';
 
-class CurrentOrdersPage extends StatefulWidget {
-  const CurrentOrdersPage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<CurrentOrdersPage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<CurrentOrdersPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

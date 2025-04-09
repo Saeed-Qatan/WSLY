@@ -10,15 +10,15 @@ Future<void> showDeleteAccountDialog(BuildContext context, VoidCallback onConfir
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // إغلاق مربع الحوار
+              Navigator.of(context).pop(); 
             },
             child: Text("إلغاء"),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
-              Navigator.of(context).pop(); // إغلاق مربع الحوار
-              onConfirm(); // تنفيذ عملية حذف الحساب
+              Navigator.of(context).pop(); 
+              onConfirm(); 
             },
             child: Text("حذف الحساب", style: TextStyle(color: Colors.white)),
           ),
