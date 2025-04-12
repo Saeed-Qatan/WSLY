@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
+import 'package:wsly/main.dart';
 import 'package:wsly/view/camera_page.dart';
+import 'package:wsly/viewmodels/camera_view_model.dart';
+import 'package:wsly/viewmodels/upload_view_model.dart';
 import 'drawer.dart';
 import '../../widgets/waveclipper_widget.dart';
 
@@ -17,7 +24,6 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderHistoryPageState extends State<OrderPage> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,18 +117,23 @@ class _OrderHistoryPageState extends State<OrderPage> {
                                 child: Text("إلغاء"),
                               ),
                               TextButton(
-  onPressed: () {
-    Navigator.of(context).pop(); // أغلق الـ dialog أولًا
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CameraPage(cameras: widget.cameras),
-      ),
-    );
-  },
-  child: Text("فتح"),
-),
-
+                                onPressed: () {
+                                  Navigator.of(
+                                    context,
+                                  ).pop(); // أغلق الـ dialog أولًا
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => ChangeNotifierProvider(
+                                            create: (_) => CameraViewModel(),
+                                            child: CameraPage(cameras: cameras),
+                                          ),
+                                    ),
+                                  );
+                                },
+                                child: Text("فتح"),
+                              ),
                             ],
                           );
                         },
@@ -159,7 +170,39 @@ class _OrderHistoryPageState extends State<OrderPage> {
                   children: [
                     IconButton(
                       icon: Icon(Icons.upload_file, color: Colors.black),
-                      onPressed: () {},
+                     onPressed: () {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("رفع فاتورة PDF"),
+        content: Text("هل تريد اختيار فاتورة PDF من جهازك؟"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("إلغاء"),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                type: FileType.custom,
+                allowedExtensions: ['pdf'],
+              );
+
+              if (result != null) {
+                final file = File(result.files.single.path!);
+                Provider.of<UploadViewModel>(context, listen: false).setFile(file);
+              }
+            },
+            child: Text("اختيار"),
+          ),
+        ],
+      );
+    },
+  );
+},
+
                     ),
                     SizedBox(width: 20),
                     Text(

@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:wsly/viewmodels/camera_view_model.dart';
+
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -18,7 +22,7 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    _initializeCamera(); // تشغيل الكاميرا بشكل تلقائي
+    _initializeCamera(); // تشغيل الكاميرا تلقائيًا
   }
 
   Future<void> _initializeCamera() async {
@@ -28,7 +32,7 @@ class _CameraPageState extends State<CameraPage> {
 
     _cameraController = CameraController(
       backCamera,
-      ResolutionPreset.high, // دقة عالية لعرض أفضل
+      ResolutionPreset.high,
     );
 
     try {
@@ -48,6 +52,21 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  Future<void> _sendImage(BuildContext context) async {
+    if (_capturedImage == null) return;
+
+    final viewModel = Provider.of<CameraViewModel>(context, listen: false);
+    await viewModel.sendImageToServer(File(_capturedImage!.path));
+
+    final message = viewModel.message;
+    if (message != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+      viewModel.clearMessage();
+    }
+  }
+
   @override
   void dispose() {
     _cameraController?.dispose();
@@ -57,37 +76,20 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          _cameraController == null || !_cameraController!.value.isInitialized
-              ? Center(child: CircularProgressIndicator())
-              : Stack(
-                children: [
-                  // عرض الكاميرا بشكل كامل
-                  CameraPreview(_cameraController!),
+      body: _cameraController == null || !_cameraController!.value.isInitialized
+          ? Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                CameraPreview(_cameraController!),
 
-                  // زر لإغلاق الكاميرا في الزاوية العلوية
+                // زر التقاط الصورة
+                if (_capturedImage == null)
                   Positioned(
-                    top: 30,
-                    left: 20,
-                    child: IconButton(
-                      icon: Icon(Icons.close, color: Colors.white, size: 30),
-                      onPressed: () {
-                        Navigator.pop(context); // إغلاق الكاميرا والعودة
-                      },
-                    ),
-                  ),
-
-                  // إضافة زر الالتقاط في الأسفل
-                  Positioned(
-                    bottom: 100,
+                    bottom: 50,
                     left: MediaQuery.of(context).size.width * 0.4,
                     child: ElevatedButton(
                       onPressed: _takePicture,
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 40,
-                        color: Colors.white,
-                      ),
+                      child: Icon(Icons.camera_alt, size: 40, color: Colors.white),
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         padding: EdgeInsets.all(20),
@@ -96,18 +98,56 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                   ),
 
-                  // عرض الصورة التي تم التقاطها
-                  if (_capturedImage != null)
-                    Positioned(
-                      bottom: 20,
-                      left: MediaQuery.of(context).size.width * 0.4,
-                      child: Image.file(
-                        File(_capturedImage!.path),
-                        height: 150,
-                      ),
+                // عرض الصورة وزر الإرسال
+                if (_capturedImage != null) ...[
+                  Positioned(
+                    bottom: 150,
+                    left: 20,
+                    right: 20,
+                    child: Image.file(
+                      File(_capturedImage!.path),
+                      height: 150,
+                      fit: BoxFit.contain,
                     ),
+                  ),
+                  Positioned(
+                    bottom: 50,
+                    left: MediaQuery.of(context).size.width * 0.3,
+                    child: Row(
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () => _sendImage(context),
+                          icon: Icon(Icons.send),
+                          label: Text("إرسال"),
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        ),
+                        SizedBox(width: 20),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _capturedImage = null;
+                            });
+                          },
+                          icon: Icon(Icons.refresh),
+                          label: Text("إعادة التصوير"),
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
+
+                // زر إغلاق
+                Positioned(
+                  top: 40,
+                  left: 20,
+                  child: IconButton(
+                    icon: Icon(Icons.close, size: 30, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }
