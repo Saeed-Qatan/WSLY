@@ -1,19 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wsly/core/helper/navigations/app_navigatios.dart';
+import 'package:provider/provider.dart';
 import 'package:wsly/view/login_pagee.dart';
+import 'package:wsly/viewmodels/ForgetPasswordViewModel.dart';
 
 
-class ForgetPage extends StatefulWidget {
+class ForgetPage extends StatelessWidget {
   const ForgetPage({super.key});
 
   @override
-  State<ForgetPage> createState() => _ForgetPageState();
-}
-
-class _ForgetPageState extends State<ForgetPage> {
-  @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<ForgetPasswordViewModel>(context);
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -38,14 +35,12 @@ class _ForgetPageState extends State<ForgetPage> {
                       fontWeight: FontWeight.bold,
                       color: Color(0xff491383)),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   child: TextField(
+                    controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 17),
                       hintText: "البريد الالكتروني",
                       hintStyle: TextStyle(
                         color: Colors.grey[600],
@@ -55,54 +50,60 @@ class _ForgetPageState extends State<ForgetPage> {
                       fillColor: const Color(0xfff1f3ff),
                       filled: true,
                       enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: Colors.white30, width: 0),
+                        borderSide: BorderSide(color: Colors.white30),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color(0xff491383), width: 2),
+                        borderSide: BorderSide(color: Color(0xff491383), width: 2),
                         borderRadius: BorderRadius.circular(10),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: viewModel.clearFields,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    AppNavigation.pushAndRemove(context, LoginPage());
-                  },
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 30),
+                viewModel.isLoading
+                    ? CircularProgressIndicator(color: Color(0xff491383))
+                    : ElevatedButton(
+                        onPressed: () async {
+                          final success = await viewModel.sendResetEmail();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success ? 'تم إرسال رابط التحقق إلى بريدك الإلكتروني' : 'يرجى إدخال بريد إلكتروني صحيح',
+                              ),
+                            ),
+                          );
+                          if (success) {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xff491383),
+                          minimumSize: Size(330, 55),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: const Text(
+                          "ارسال",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 19,
+                              fontFamily: "NotoSansArabic"),
+                        ),
                       ),
-                      backgroundColor: Color(0xff491383),
-                      minimumSize: Size(330, 55)),
-                  child: Text(
-                    "ارسال",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 19,
-                        fontFamily: "NotoSansArabic"),
-                  ),
-                ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
                   },
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero, // Remove padding
-                    minimumSize: Size(0, 0),
-                  ),
-                  child: Text(
+                  child: const Text(
                     "رجوع",
                     style: TextStyle(
-                        color: Colors.grey[800],
+                        color: Colors.grey,
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
                         fontFamily: "NotoSansArabic"),

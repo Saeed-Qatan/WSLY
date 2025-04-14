@@ -2,7 +2,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:wsly/data/services/auth_service.dart';
+import 'package:wsly/view/Admin/main-page.dart';
 import 'package:wsly/view/first_page.dart';
+import 'package:wsly/view/login_pagee.dart';
 
 // class SplashScreen extends StatelessWidget {
 //   const SplashScreen({super.key});
@@ -32,16 +35,29 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final token = await AuthService().getToken();
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (token != null && token.isNotEmpty) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => HelloPage()), // انتقل إلى الشاشة الرئيسية
+        MaterialPageRoute(builder: (_) => const MainPage()),
       );
-    });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HelloPage()),
+      );
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wsly/data/services/auth_service.dart';
 
+
 class DeleteAccountViewModel extends ChangeNotifier {
   final AuthService _authService;
   final int userId;
@@ -16,7 +17,7 @@ class DeleteAccountViewModel extends ChangeNotifier {
     }
 
     try {
-      await _authService.deleteAccount(userId); 
+      await _authService.deleteAccount (userId); 
       Navigator.pushReplacementNamed(context, '/login'); 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

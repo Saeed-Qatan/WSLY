@@ -3,38 +3,43 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wsly/core/constants/services/api_url.dart';
+import 'package:wsly/data/models/UserRegisterModel.dart';
+import 'package:wsly/data/models/login_model.dart';
 
 class AuthService {
-  Future<void> login(String email, String password) async {
-    final url = Uri.parse("${ApiUrl.baseUrl}/login");
+  Future<bool> login(LoginModel user) async {
+    final url = Uri.parse('${ApiUrl.baseUrl}/login');
     final response = await http.post(
       url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"email": email, "password": password}),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(user.toJson()),
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final userId = data["user_id"]; 
+      final token = data['token'];
 
+      // حفظ التوكن في SharedPreferences
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt("user_id", userId);
+      await prefs.setString('auth_token', token);
+
+      return true;
     } else {
-      throw Exception("فشل تسجيل الدخول");
+      return false;
     }
   }
 
-  
-  Future<int?> getUserId() async {
+  Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt("user_id");
-  }
-  Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // مسح بيانات المستخدم المخزنة محليًا
+    return prefs.getString('auth_token');
   }
 
-  Future<void> deleteAccount(int userId) async {
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+  }
+
+   Future<void> deleteAccount(int userId) async {
     final url = Uri.parse("${ApiUrl.baseUrl}/delete-account");
 
     final response = await http.delete(
@@ -49,4 +54,38 @@ class AuthService {
       throw Exception("فشل حذف الحساب");
     }
   }
+  
+   Future<bool> register(UserModel user) async {
+    final url = Uri.parse("${ApiUrl.baseUrl}/register");
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(user.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print("Register failed: ${response.body}");
+      return false;
+    }
+  }
+
+
+  Future<bool> sendResetEmail(Map<String, dynamic> data) async {
+    final url = Uri.parse("${ApiUrl.baseUrl}/forgot-password");
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(data),
+    );
+
+    return response.statusCode == 200;
+  }
 }
+
+
+
+ 
