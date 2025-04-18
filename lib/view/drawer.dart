@@ -144,7 +144,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () {
               showLogoutDialog(context, () async {
                 await LogoutViewModel(
-                  context.read<AuthService>(),
+                  
                 ).logout(context);
               });
             },

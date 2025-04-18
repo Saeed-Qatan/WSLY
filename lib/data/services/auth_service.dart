@@ -34,9 +34,28 @@ class AuthService {
     return prefs.getString('auth_token');
   }
 
-  Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
+ Future<bool> logout(String token) async {
+    final url = Uri.parse("${ApiUrl.baseUrl}/api/logout");
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print("فشل تسجيل الخروج: ${response.statusCode} - ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("خطأ أثناء الاتصال بالخادم: $e");
+      return false;
+    }
   }
 
    Future<void> deleteAccount(int userId) async {
@@ -74,7 +93,7 @@ class AuthService {
 
 
   Future<bool> sendResetEmail(Map<String, dynamic> data) async {
-    final url = Uri.parse("${ApiUrl.baseUrl}/forgot-password");
+    final url = Uri.parse("${ApiUrl.baseUrl}/forgot");
 
     final response = await http.post(
       url,

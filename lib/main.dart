@@ -13,6 +13,7 @@ import 'package:wsly/viewmodels/login_view_model.dart';
 import 'package:wsly/viewmodels/logout_viewmodel.dart';
 import 'package:wsly/viewmodels/order_registry_viewmodel.dart';
 import 'package:camera/camera.dart';
+import 'package:wsly/viewmodels/order_view_model.dart';
 import 'package:wsly/viewmodels/upload_view_model.dart';
 
 
@@ -35,10 +36,7 @@ Future<Null> main() async {
 
         Provider<AuthService>(create: (_) => AuthService()),
 
-        ChangeNotifierProvider<LogoutViewModel>(
-          create: (context) => LogoutViewModel(context.read<AuthService>()),
-        ),
-
+      
         ChangeNotifierProvider<DeleteAccountViewModel>(
           create:
               (context) =>
@@ -46,11 +44,13 @@ Future<Null> main() async {
         ),
 
         ChangeNotifierProvider(create: (_) => DateTimeViewModel()),
-        ChangeNotifierProvider(create: (_) => CameraViewModel()),
-        ChangeNotifierProvider(create: (_) => UploadViewModel()),
+       // ChangeNotifierProvider(create: (_) => CameraViewModel()),
+       // ChangeNotifierProvider(create: (_) => UploadViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
+         ChangeNotifierProvider(create: (_) => LogoutViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => ForgetPasswordViewModel()),
+        ChangeNotifierProvider(create: (_) => OrderViewModel()),
 
       ],
       child: MyApp(),

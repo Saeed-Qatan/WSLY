@@ -32,6 +32,7 @@ class RegisterViewModel extends ChangeNotifier {
       email: emailController.text.trim(),
       address: addressController.text.trim(),
       password: passwordController.text.trim(),  
+      password_confirmation: confirmPasswordController.text.trim(),
     );
 
     final success = await _authService.register(user);

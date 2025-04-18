@@ -1,31 +1,35 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/main.dart';
 import 'package:wsly/view/camera_page.dart';
-import 'package:wsly/viewmodels/camera_view_model.dart';
-import 'package:wsly/viewmodels/upload_view_model.dart';
+import 'package:wsly/viewmodels/order_view_model.dart';
 import 'drawer.dart';
 import '../../widgets/waveclipper_widget.dart';
 
 class OrderPage extends StatefulWidget {
-  List<CameraDescription> cameras = [];
-
-  OrderPage(this.cameras, {super.key});
+  const OrderPage({super.key});
 
   @override
-  State<OrderPage> createState() => _OrderHistoryPageState();
+  State<OrderPage> createState() => _OrderPageState();
 }
 
-class _OrderHistoryPageState extends State<OrderPage> {
+class _OrderPageState extends State<OrderPage> {
+   final TextEditingController _shopNameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<OrderViewModel>(context, listen: false).loadSavedFilePath();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final orderVM = Provider.of<OrderViewModel>(context);
+
     return Scaffold(
       drawer: CustomDrawer(
         profileEdit: ProfileEdit(
@@ -68,7 +72,6 @@ class _OrderHistoryPageState extends State<OrderPage> {
             SizedBox(height: 30),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
                 Text(
                   "اطلب يوصل لك",
@@ -82,14 +85,27 @@ class _OrderHistoryPageState extends State<OrderPage> {
                 SizedBox(height: 20),
                 Image.asset(
                   "assets/images/download (6).png",
-                  fit: BoxFit.scaleDown,
-
-                  alignment: Alignment.topCenter,
                   width: 90,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "تحتاج الى رفع صورة الفاتورة",
+                  "أدخل اسم المحل",
+                  style: TextStyle(fontSize: 18),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: TextField(
+                    controller: _shopNameController,
+                    textAlign: TextAlign.right,
+                    decoration: InputDecoration(
+                      hintText: "اسم المحل",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "تحتاج الى رفع صورة أو فاتورة PDF",
                   style: TextStyle(
                     fontSize: 20,
                     color: Color(0xff4B148B),
@@ -98,115 +114,73 @@ class _OrderHistoryPageState extends State<OrderPage> {
                 ),
                 SizedBox(height: 20),
 
+                // عرض اسم الملف
+                if (orderVM.invoiceFile != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      "تم اختيار الملف: ${orderVM.invoiceFile!.path.split('/').last}",
+                      style: TextStyle(fontSize: 14, color: Colors.green),
+                    ),
+                  ),
+
+                // زر فتح الكاميرا
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  height: 45,
                   width: MediaQuery.of(context).size.width * 0.6,
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text("فتح الكاميرا"),
-                            content: Text("هل تريد فتح الكاميرا؟"),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("إلغاء"),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(
-                                    context,
-                                  ).pop(); // أغلق الـ dialog أولًا
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => ChangeNotifierProvider(
-                                            create: (_) => CameraViewModel(),
-                                            child: CameraPage(cameras: cameras),
-                                          ),
-                                    ),
-                                  );
-                                },
-                                child: Text("فتح"),
-                              ),
-                            ],
-                          );
-                        },
+                        builder: (context) => AlertDialog(
+                          title: Text("فتح الكاميرا"),
+                          content: Text("هل تريد فتح الكاميرا؟"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("إلغاء"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => CameraPage(cameras: cameras),
+                                  ),
+                                );
+                              },
+                              child: Text("فتح"),
+                            ),
+                          ],
+                        ),
                       );
                     },
+                    icon: Icon(Icons.camera_alt_outlined, color: Colors.white),
+                    label: Text("فتح الكاميرا", style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff4B148B),
+                      backgroundColor: Color(0xff4B148B),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.camera_alt_outlined,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        SizedBox(width: 25),
-                        Text(
-                          "فتح الكاميرا",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
+                SizedBox(height: 25),
 
-                SizedBox(height: 35),
+                // اختيار ملف PDF
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     IconButton(
                       icon: Icon(Icons.upload_file, color: Colors.black),
-                     onPressed: () {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text("رفع فاتورة PDF"),
-        content: Text("هل تريد اختيار فاتورة PDF من جهازك؟"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("إلغاء"),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                type: FileType.custom,
-                allowedExtensions: ['pdf'],
-              );
-
-              if (result != null) {
-                final file = File(result.files.single.path!);
-                Provider.of<UploadViewModel>(context, listen: false).setFile(file);
-              }
-            },
-            child: Text("اختيار"),
-          ),
-        ],
-      );
-    },
-  );
-},
-
+                      onPressed: () async {
+                        await orderVM.pickPDF();
+                      },
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 10),
                     Text(
-                      "اختر الفاتورة من الملفات",
+                      "اختر فاتورة PDF",
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
@@ -215,25 +189,33 @@ class _OrderHistoryPageState extends State<OrderPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
 
+                SizedBox(height: 30),
+
+                // زر إرسال الطلب
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  height: 45,
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final success = await orderVM.submitOrder();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(success ? 'تم إرسال الطلب بنجاح' : 'فشل في إرسال الطلب'),
+                          backgroundColor: success ? Colors.green : Colors.red,
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff4B148B),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: Text(
-                      "تقديم الطلب",
-                      style: const TextStyle(fontSize: 15, color: Colors.white),
-                    ),
+                    child: Text("تقديم الطلب", style: TextStyle(color: Colors.white, fontSize: 15)),
                   ),
                 ),
+                SizedBox(height: 20),
               ],
             ),
           ],

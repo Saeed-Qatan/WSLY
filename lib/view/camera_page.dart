@@ -1,153 +1,112 @@
-import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart' as path;
-import 'package:wsly/viewmodels/camera_view_model.dart';
-
+import '../viewmodels/order_view_model.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-
-  const CameraPage({Key? key, required this.cameras}) : super(key: key);
+  const CameraPage({super.key, required this.cameras});
 
   @override
   State<CameraPage> createState() => _CameraPageState();
 }
 
 class _CameraPageState extends State<CameraPage> {
-  CameraController? _cameraController;
-  XFile? _capturedImage;
+  late CameraController _controller;
+  bool _isReady = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeCamera(); // تشغيل الكاميرا تلقائيًا
+    _initCamera();
   }
 
-  Future<void> _initializeCamera() async {
-    final backCamera = widget.cameras.firstWhere(
-      (camera) => camera.lensDirection == CameraLensDirection.back,
-    );
-
-    _cameraController = CameraController(
-      backCamera,
-      ResolutionPreset.high,
-    );
-
-    try {
-      await _cameraController!.initialize();
-      if (mounted) setState(() {});
-    } catch (e) {
-      print("خطأ في تشغيل الكاميرا: $e");
-    }
-  }
-
-  Future<void> _takePicture() async {
-    if (_cameraController != null && _cameraController!.value.isInitialized) {
-      final image = await _cameraController!.takePicture();
-      setState(() {
-        _capturedImage = image;
-      });
-    }
-  }
-
-  Future<void> _sendImage(BuildContext context) async {
-    if (_capturedImage == null) return;
-
-    final viewModel = Provider.of<CameraViewModel>(context, listen: false);
-    await viewModel.sendImageToServer(File(_capturedImage!.path));
-
-    final message = viewModel.message;
-    if (message != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
-      viewModel.clearMessage();
-    }
+  Future<void> _initCamera() async {
+    _controller = CameraController(widget.cameras[0], ResolutionPreset.medium);
+    await _controller.initialize();
+    if (!mounted) return;
+    setState(() => _isReady = true);
   }
 
   @override
   void dispose() {
-    _cameraController?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _cameraController == null || !_cameraController!.value.isInitialized
-          ? Center(child: CircularProgressIndicator())
-          : Stack(
-              children: [
-                CameraPreview(_cameraController!),
+      appBar: AppBar(title: Text("التقاط صورة")),
+      body: _isReady
+          ? Consumer<OrderViewModel>(
+              builder: (context, orderVM, child) {
+                return Stack(
+                  children: [
+                    CameraPreview(_controller),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // عرض صورة مصغرة بعد الالتقاط
+                            if (orderVM.capturedImage != null)
+                              Column(
+                                children: [
+                                  Image.file(
+                                    orderVM.capturedImage!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          orderVM.clearCapturedImage();
+                                        },
+                                        child: Text("إعادة الالتقاط"),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("استخدام الصورة"),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
 
-                // زر التقاط الصورة
-                if (_capturedImage == null)
-                  Positioned(
-                    bottom: 50,
-                    left: MediaQuery.of(context).size.width * 0.4,
-                    child: ElevatedButton(
-                      onPressed: _takePicture,
-                      child: Icon(Icons.camera_alt, size: 40, color: Colors.white),
-                      style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(),
-                        padding: EdgeInsets.all(20),
-                        backgroundColor: Colors.black.withOpacity(0.5),
+                            // زر التقاط الصورة
+                            if (orderVM.capturedImage == null)
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  await orderVM.captureImage(_controller);
+                                },
+                                backgroundColor: Colors.deepPurple,
+                                child: Icon(Icons.camera_alt, color: Colors.white),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-
-                // عرض الصورة وزر الإرسال
-                if (_capturedImage != null) ...[
-                  Positioned(
-                    bottom: 150,
-                    left: 20,
-                    right: 20,
-                    child: Image.file(
-                      File(_capturedImage!.path),
-                      height: 150,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 50,
-                    left: MediaQuery.of(context).size.width * 0.3,
-                    child: Row(
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => _sendImage(context),
-                          icon: Icon(Icons.send),
-                          label: Text("إرسال"),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                        ),
-                        SizedBox(width: 20),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              _capturedImage = null;
-                            });
-                          },
-                          icon: Icon(Icons.refresh),
-                          label: Text("إعادة التصوير"),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-
-                // زر إغلاق
-                Positioned(
-                  top: 40,
-                  left: 20,
-                  child: IconButton(
-                    icon: Icon(Icons.close, size: 30, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ],
-            ),
+                  ],
+                );
+              },
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -26,7 +26,7 @@ int _selectedIndex = 0;
 class _MainPageState extends State<MainPage> {
   static final List<Widget> _screens = <Widget>[
     OrderHistoryPage(),
-    OrderPage(cameras),
+    OrderPage(),
    CurrentOrdersPage(),
   ];
 
