@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wsly/core/constants/services/api_url.dart';
 
 class OrderService {
   // اختيار ملف PDF
@@ -25,7 +26,7 @@ class OrderService {
 
   // رفع الطلب إلى السيرفر مع إضافة اسم المحل
   static Future<bool> submitOrder(String shopName, File file) async {
-    final url = Uri.parse('https://example.com/submitOrder');
+    final url = Uri.parse('${ApiUrl.baseUrl}/order');
 
     var request = http.MultipartRequest('POST', url)
       ..fields['shop_name'] = shopName // إرسال اسم المحل

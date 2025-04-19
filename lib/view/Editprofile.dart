@@ -1,590 +1,243 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
-import 'drawer.dart';
-import 'main-page.dart';
-import '../../widgets/waveclipper_widget.dart';
+import 'package:wsly/viewmodels/ProfileEditViewModel.dart';
+import 'package:wsly/widgets/wavaclipper_profile_widget.dart';
+import 'package:wsly/widgets/waveclipper_widget.dart'; // تأكد من إضافة هذه المكتبة في pubspec.yaml
 
-class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+class EditProfileView extends StatefulWidget {
+  final ProfileEdit initialProfile;
+
+  const EditProfileView({super.key, required this.initialProfile});
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  _EditProfileViewState createState() => _EditProfileViewState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileViewState extends State<EditProfileView> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _numberController;
+  late TextEditingController _addressController;
+  late TextEditingController _carPlateController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.initialProfile.name);
+    _emailController = TextEditingController(text: widget.initialProfile.email);
+    _numberController = TextEditingController(
+      text: widget.initialProfile.number,
+    );
+    _addressController = TextEditingController(
+      text: widget.initialProfile.address,
+    );
+    _carPlateController = TextEditingController(
+      text: widget.initialProfile.carPlate,
+    );
+    _passwordController = TextEditingController(
+      text: widget.initialProfile.password,
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _numberController.dispose();
+    _addressController.dispose();
+    _carPlateController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: CustomDrawer(
-        profileEdit: ProfileEdit(
-          name: 'علي ناصر',
-          email: 'Alinasser@gmail.com',
-          address: '123 Main St',
-          number: '774165326',
-          car_Plate: 'ABC/123',
-          password: '123456',
-        ),
-      ),
-
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.transparent,
-        buttonBackgroundColor: Color(0xff7042A4),
-        color: Color(0xff4B148B),
-        animationDuration: const Duration(milliseconds: 300),
-        items: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.history, size: 26, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MainPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.shopping_cart,
-              size: 26,
-              color: Colors.white,
+    return ChangeNotifierProvider(
+      create:
+          (_) => EditProfileViewModel()..setInitialData(widget.initialProfile),
+      child: Scaffold(
+        body: Column(
+          children: [
+            // Waveclipper Widget بدلًا من AppBar
+            WaveclipperProfileWidget(),
+            Expanded(
+              child: Consumer<EditProfileViewModel>(
+                builder: (context, viewModel, _) {
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Center(
+                          child: const Text(
+                            "بيانات الكابتن",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff4B148B),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          label: "اسم الكابتن",
+                          controller: _nameController,
+                          onChanged: viewModel.updateName,
+                          keyboardType: TextInputType.name,
+                        ),
+                        _buildTextField(
+                          label: "إيميل الكابتن",
+                          controller: _emailController,
+                          onChanged: viewModel.updateEmail,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        _buildTextField(
+                          label: "رقم الكابتن",
+                          controller: _numberController,
+                          onChanged: viewModel.updateNumber,
+                          keyboardType: TextInputType.phone,
+                        ),
+                        _buildTextField(
+                          label: "عنوان الكابتن",
+                          controller: _addressController,
+                          onChanged: viewModel.updateAddress,
+                          keyboardType: TextInputType.streetAddress,
+                        ),
+                        _buildTextField(
+                          label: "لوحة السيارة",
+                          controller: _carPlateController,
+                          onChanged: viewModel.updateCarPlate,
+                          keyboardType: TextInputType.text,
+                        ),
+                        _buildTextField(
+                          label: "كلمة المرور",
+                          controller: _passwordController,
+                          onChanged: viewModel.updatePassword,
+                          obscureText: true,
+                          keyboardType: TextInputType.text,
+                          icon: Icons.lock,
+                        ),
+                        const SizedBox(height: 30),
+                        Center(
+                          child: SizedBox(
+                            width: 250,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff4B148B),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                shadowColor: Colors.black.withOpacity(0.3),
+                                elevation: 8,
+                              ),
+                              onPressed: () async {
+                                final success = await viewModel.submitProfile();
+                                final snackBar = SnackBar(
+                                  content: Text(
+                                    success
+                                        ? 'تم تحديث الملف بنجاح'
+                                        : 'فشل التحديث',
+                                  ),
+                                  backgroundColor:
+                                      success ? Colors.green : Colors.red,
+                                );
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(snackBar);
+                              },
+                              child: const Text(
+                                "تحديث",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MainPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.list_alt, size: 26, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MainPage()),
-              );
-            },
-          ),
-        ],
-
-        onTap: (value) {
-          setState(() {});
-        },
-      ),
-
-      body: Profileedit(
-        profileEdit: ProfileEdit(
-          name: 'علي ناصر',
-          email: 'AliNasser@gmail.com',
-          address: '123 Main St',
-          number: '774165326',
-          car_Plate: 'ABC/123',
-          password: '123456',
+          ],
         ),
       ),
     );
   }
-}
 
-class Profileedit extends StatefulWidget {
-  final ProfileEdit profileEdit;
-
-  Profileedit({super.key, required this.profileEdit});
-
-  @override
-  State<Profileedit> createState() => _ProfileeditState();
-}
-
-class _ProfileeditState extends State<Profileedit> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required ValueChanged<String> onChanged,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+    IconData? icon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            WaveclipperWidget(),
-            Padding(
-              padding: const EdgeInsets.only(right: 13.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: text_rich_method(widget),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff4B148B),
               ),
             ),
-            SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "  تعديل الملف الشخصي ",
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Color(0xff4B148B),
-                      fontWeight: FontWeight.bold,
-                    ),
+            const SizedBox(height: 6),
+            TextFormField(
+              controller: controller,
+              onChanged: onChanged,
+              obscureText: obscureText,
+              keyboardType: keyboardType,
+              decoration: InputDecoration(
+                prefixIcon:
+                    icon != null
+                        ? Icon(icon, color: const Color(0xff4B148B))
+                        : null,
+                filled: true,
+                fillColor: const Color.fromARGB(255, 245, 245, 245),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(
+                    color: Color(0xff4B148B),
+                    width: 1,
                   ),
-                ],
-              ),
-            ),
-            Divider(color: Colors.black, indent: 100, endIndent: 100),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff4B148B).withOpacity(0.6),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(
+                    color: Color(0xff4B148B),
+                    width: 2,
                   ),
-
-                  child: Column(
-                    children: [
-                      Text(
-                        "بيانات الكابتن",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      ListView(
-                        shrinkWrap: true,
-                        children: [
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "اسم الكابتن",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            209,
-                                            209,
-                                            209,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        height: 35,
-                                        width: 250,
-                                        child: TextField(
-                                          cursorColor: const Color.fromARGB(
-                                            255,
-                                            8,
-                                            20,
-                                            98,
-                                          ),
-                                          onChanged: (value) {
-                                            widget.profileEdit.name = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: widget.profileEdit.name,
-                                            hintStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "ايميل الكابتن",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            209,
-                                            209,
-                                            209,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        height: 35,
-                                        width: 250,
-                                        child: TextField(
-                                          cursorColor: const Color.fromARGB(
-                                            255,
-                                            8,
-                                            20,
-                                            98,
-                                          ),
-                                          onChanged: (value) {
-                                            widget.profileEdit.name = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: widget.profileEdit.email,
-                                            hintStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "رقم الكابتن",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            209,
-                                            209,
-                                            209,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        height: 35,
-                                        width: 250,
-                                        child: TextField(
-                                          cursorColor: const Color.fromARGB(
-                                            255,
-                                            8,
-                                            20,
-                                            98,
-                                          ),
-                                          onChanged: (value) {
-                                            widget.profileEdit.number = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: widget.profileEdit.number,
-                                            hintStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "عنوان الكابتن",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            209,
-                                            209,
-                                            209,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        height: 35,
-                                        width: 250,
-                                        child: TextField(
-                                          cursorColor: const Color.fromARGB(
-                                            255,
-                                            8,
-                                            20,
-                                            98,
-                                          ),
-                                          onChanged: (value) {
-                                            widget.profileEdit.address = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText:
-                                                widget.profileEdit.address,
-                                            hintStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "لوحة السيارة",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            209,
-                                            209,
-                                            209,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        height: 35,
-                                        width: 250,
-                                        child: TextField(
-                                          cursorColor: const Color.fromARGB(
-                                            255,
-                                            8,
-                                            20,
-                                            98,
-                                          ),
-                                          onChanged: (value) {
-                                            widget.profileEdit.car_Plate =
-                                                value;
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText:
-                                                widget.profileEdit.car_Plate,
-                                            hintStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-
-                                  Row(
-                                    children: [
-                                      Text(
-                                        " كلمة المرور",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            209,
-                                            209,
-                                            209,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        height: 35,
-                                        width: 250,
-                                        child: TextField(
-                                          cursorColor: const Color.fromARGB(
-                                            255,
-                                            8,
-                                            20,
-                                            98,
-                                          ),
-                                          onChanged: (value) {
-                                            widget.profileEdit.password = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText:
-                                                widget.profileEdit.password,
-                                            hintStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Container(
-                                      color: Color(0xff4B148B),
-                                      child: TextButton(
-                                        child: Text(
-                                          "تحديث",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          // TODO: Update user profile
-                                          print("Updating user profile");
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 20,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(
+                    color: Color(0xff4B148B),
+                    width: 1,
                   ),
                 ),
               ),
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
-// widget.profileEdit.email
-
-Text text_rich_method(dynamic widget) {
-  return Text.rich(
-    TextSpan(
-      children: [
-        TextSpan(
-          text: " مرحبا بك  ",
-          style: TextStyle(
-            fontSize: 30,
-            color: Color(0xff4B148B),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        TextSpan(
-          text: widget.profileEdit.name,
-          style: TextStyle(
-            fontSize: 30,
-            color: Color(0xff13D08C),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-//sumbit button
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.circular(8),
-                        //   child: Container(
-                        //     color: Color(0xff4B148B),
-                        //     padding: EdgeInsets.symmetric(
-                        //       horizontal: 10,
-                        //       vertical: 5,
-                        //     ),
-                        //     child: Text(
-                        //       "تحديث",
-                        //       style: TextStyle(
-                        //         color: Colors.white,
-                        //         fontWeight: FontWeight.bold,
-                        //         fontSize: 16,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-
-
-
-//text field
-// TextField(
-//                     onChanged: (value) {
-                      // widget.profileEdit.name = value;
-//                     },
-//                     decoration: InputDecoration(
-//                       labelText: "الاسم",
-//                       labelStyle: TextStyle(
-//                         color: Color(0xff4B148B),
-//                         fontSize: 18,
-//                       ),
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(8),
-//                       ),
-//                     ),
-//                   ),

@@ -29,6 +29,7 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
                       IconButton(
                         icon: Icon(Icons.menu, color: Colors.white),
                         onPressed: () {
+                          
                           Scaffold.of(context).openDrawer();
                           print("open drawer");
                         },

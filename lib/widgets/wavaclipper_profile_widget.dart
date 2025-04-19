@@ -1,14 +1,14 @@
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 
-class WaveclipperWidget extends StatefulWidget {
-  const WaveclipperWidget({super.key});
+class WaveclipperProfileWidget extends StatefulWidget {
+  const WaveclipperProfileWidget({super.key});
 
   @override
-  State<WaveclipperWidget> createState() => _WaveclipperWidgetState();
+  State<WaveclipperProfileWidget> createState() => _WaveclipperWidgetState();
 }
 
-class _WaveclipperWidgetState extends State<WaveclipperWidget> {
+class _WaveclipperWidgetState extends State<WaveclipperProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -27,10 +27,10 @@ class _WaveclipperWidgetState extends State<WaveclipperWidget> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.menu, color: Colors.white),
+                        icon: Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                          print("open drawer");
+                          
+                          Navigator.pop(context);
                         },
                       ),
                       SizedBox(width: 100),

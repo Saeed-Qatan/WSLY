@@ -1,37 +1,38 @@
 class ProfileEdit {
-  late final String name;
-  late final String email;
-  late final String number;
-  late final String address;
-  late final String car_Plate;
-  late final String password;
+  late String name;
+  late String email;
+  late String number;
+  late String address;
+  late String carPlate;
+  late String password;
 
   ProfileEdit({
     required this.name,
     required this.email,
     required this.number,
     required this.address,
-    required this.car_Plate,
-    required this.password,
+    required this.carPlate,
+    required this.password, required String car_Plate,
   });
 
   factory ProfileEdit.fromJson(Map<String, dynamic> json) {
     return ProfileEdit(
       name: json["name"],
       email: json["email"],
-      number: json["number"],
+      number: json["phone_number"],
       address: json["address"],
-      car_Plate: json["car_Plate"],
-      password: json["password"],
+      carPlate: json["carPlate"],
+      password: json["password"], car_Plate: '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'email': email,
-      'number': number,
+      'phone_number': number,
       'address': address,
-      'car_Plate': car_Plate,
+      'carPlate': carPlate,
       'password': password,
     };
   }

@@ -8,14 +8,14 @@ import 'package:http/http.dart' as http;
 
 class OrderRegistryServices {
     Future <List<OrderRegistryModel>> fetchOrders() async{
-      final response = await http.get(Uri.parse(ApiUrl.baseUrl));
+      final response = await http.get(Uri.parse("${ApiUrl.baseUrl}/customers/not_delivered" ));
 
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => OrderRegistryModel.fromJson(json)).toList();
 
       } else{
-        throw Exception('Failed to load orders${response.statusCode}');
+        throw Exception('خطاء في جلب الطلبات${response.statusCode}');
       }
       
     }

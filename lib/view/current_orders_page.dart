@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/data/models/current_orders_model.dart';
+import 'package:wsly/viewmodels/ProfileEditViewModel.dart';
 import 'drawer.dart';
 import 'package:wsly/viewmodels/current_order_viewmodel.dart';
 import '../../widgets/current_orders.dart';
@@ -15,20 +16,19 @@ class CurrentOrdersPage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<CurrentOrdersPage> {
+   late final profile;
   @override
+  void initState() {
+    super.initState();
+    profile = Provider.of<EditProfileViewModel>(context, listen: false).profile;
+    
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: CustomDrawer(
-        profileEdit: ProfileEdit(
-          name: 'علي ناصر',
-          email: 'Alinasser@gmail.com',
-          address: '123 Main St',
-          number: '774165326',
-          car_Plate: 'ABC/123',
-          password: '123456',
-        ),
-      ),
+  profileEdit: profile,
+),
       body: SingleChildScrollView(
         child: Column(
           children: [

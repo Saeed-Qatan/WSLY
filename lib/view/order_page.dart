@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/main.dart';
 import 'package:wsly/view/camera_page.dart';
+import 'package:wsly/viewmodels/ProfileEditViewModel.dart';
 import 'package:wsly/viewmodels/order_view_model.dart';
 import 'drawer.dart';
 import '../../widgets/waveclipper_widget.dart';
@@ -19,10 +20,12 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
    final TextEditingController _shopNameController = TextEditingController();
+   late final profile;
 
   @override
   void initState() {
     super.initState();
+    profile = Provider.of<EditProfileViewModel>(context, listen: false).profile;
     Provider.of<OrderViewModel>(context, listen: false).loadSavedFilePath();
   }
 
@@ -32,15 +35,8 @@ class _OrderPageState extends State<OrderPage> {
 
     return Scaffold(
       drawer: CustomDrawer(
-        profileEdit: ProfileEdit(
-          name: 'علي ناصر',
-          email: 'Alinasser@gmail.com',
-          address: '123 Main St',
-          number: '774165326',
-          car_Plate: 'ABC/123',
-          password: '123456',
-        ),
-      ),
+  profileEdit: profile,
+),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(

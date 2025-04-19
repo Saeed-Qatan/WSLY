@@ -36,17 +36,7 @@ class _MainPageState extends State<MainPage> {
       textDirection: TextDirection.ltr,
       child: SafeArea(
         child: Scaffold(
-          drawer: CustomDrawer(
-            profileEdit: ProfileEdit(
-              name: 'علي ناصر',
-              email: 'Alinasser@gmail.com',
-              address: '123 Main St',
-              number: '774165326',
-              car_Plate: 'ABC/123',
-              password: '123456',
-            ),
-          ),
-
+         
           body: Center(child: _screens[_selectedIndex]),
 
           bottomNavigationBar: CurvedNavigationBar(

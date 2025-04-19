@@ -4,8 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wsly/data/services/auth_service.dart';
 import 'package:wsly/view/splash_page.dart';
 import 'package:wsly/viewmodels/ForgetPasswordViewModel.dart';
+import 'package:wsly/viewmodels/ProfileEditViewModel.dart';
 import 'package:wsly/viewmodels/RegisterViewModel.dart';
-import 'package:wsly/viewmodels/camera_view_model.dart';
+
 import 'package:wsly/viewmodels/current_order_viewmodel.dart';
 import 'package:wsly/viewmodels/date_time_view_model.dart';
 import 'package:wsly/viewmodels/delete_account_view_model.dart';
@@ -14,7 +15,6 @@ import 'package:wsly/viewmodels/logout_viewmodel.dart';
 import 'package:wsly/viewmodels/order_registry_viewmodel.dart';
 import 'package:camera/camera.dart';
 import 'package:wsly/viewmodels/order_view_model.dart';
-import 'package:wsly/viewmodels/upload_view_model.dart';
 
 
 
@@ -51,6 +51,7 @@ Future<Null> main() async {
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => ForgetPasswordViewModel()),
         ChangeNotifierProvider(create: (_) => OrderViewModel()),
+         ChangeNotifierProvider(create: (_) => EditProfileViewModel()),
 
       ],
       child: MyApp(),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wsly/data/models/ProfileEdit_model.dart';
 import 'package:wsly/data/services/auth_service.dart';
+import 'package:wsly/view/ComplaintsSuggestionsView.dart';
+import 'package:wsly/view/TermsAndConditionsView.dart';
 
 import 'package:wsly/viewmodels/delete_account_view_model.dart';
 import 'package:wsly/viewmodels/logout_viewmodel.dart';
@@ -99,7 +101,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditProfile()),
+                MaterialPageRoute(builder: (context) => EditProfileView(initialProfile: widget.profileEdit,)),
               );
             },
           ),
@@ -114,7 +116,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsView()));
             },
           ),
           ListTile(
@@ -128,7 +130,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ComplaintsSuggestionsView()));
             },
           ),
           ListTile(
